@@ -1,4 +1,5 @@
 package com.carlos.usuarios.beusers.models.entities;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,7 +18,16 @@ public class Materia {
 
     private String imagen;
 
+    @Column(columnDefinition = "TEXT")
     private String descripcion;
+
+    public Materia() {
+        // Constructor sin argumentos requerido por JPA
+    }
+
+    public Materia(Long id) {
+        this.id = id;
+    }
 
     public Long getId() {
         return id;

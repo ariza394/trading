@@ -1,32 +1,33 @@
 package com.carlos.usuarios.beusers.models.entities;
 
+import javax.validation.constraints.Pattern;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "anexos")
-public class AnexoMaterial {
+@Table(name = "servicios")
+public class Servicio {
+
+    public Servicio() {
+        // Constructor por defecto sin argumentos
+    }
+    
+    public Servicio(Long id) {
+        this.id = id;
+    }
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Pattern(regexp = "^(senales|curso|copy)$")
     private String nombre;
 
     private String descripcion;
-
-    private String tipo;
-
-    private String ubicacion;
-
-    @ManyToOne
-    @JoinColumn(name = "id_material")
-    private Materia materia;
 
     public Long getId() {
         return id;
@@ -51,30 +52,5 @@ public class AnexoMaterial {
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
-
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
-
-    public String getUbicacion() {
-        return ubicacion;
-    }
-
-    public void setUbicacion(String ubicacion) {
-        this.ubicacion = ubicacion;
-    }
-
-    public Materia getMateria() {
-        return materia;
-    }
-
-    public void setMateria(Materia materia) {
-        this.materia = materia;
-    }
-
     
 }

@@ -9,24 +9,22 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "anexos")
-public class AnexoMaterial {
+@Table(name = "orden_estudio")
+public class OrdenEstudio {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nombre;
-
-    private String descripcion;
-
-    private String tipo;
-
-    private String ubicacion;
+    private Integer numero;
 
     @ManyToOne
     @JoinColumn(name = "id_material")
     private Materia materia;
+
+    @ManyToOne
+    @JoinColumn(name = "id_plan_estudio")
+    private PlanEstudio estudio;
 
     public Long getId() {
         return id;
@@ -36,36 +34,12 @@ public class AnexoMaterial {
         this.id = id;
     }
 
-    public String getNombre() {
-        return nombre;
+    public Integer getNumero() {
+        return numero;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
-
-    public String getUbicacion() {
-        return ubicacion;
-    }
-
-    public void setUbicacion(String ubicacion) {
-        this.ubicacion = ubicacion;
+    public void setNumero(Integer numero) {
+        this.numero = numero;
     }
 
     public Materia getMateria() {
@@ -74,6 +48,14 @@ public class AnexoMaterial {
 
     public void setMateria(Materia materia) {
         this.materia = materia;
+    }
+
+    public PlanEstudio getEstudio() {
+        return estudio;
+    }
+
+    public void setEstudio(PlanEstudio estudio) {
+        this.estudio = estudio;
     }
 
     

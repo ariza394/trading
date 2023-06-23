@@ -15,29 +15,40 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.carlos.usuarios.beusers.models.entities.PlanEstudio;
-import com.carlos.usuarios.beusers.services.PlanEstudioService;
+import com.carlos.usuarios.beusers.models.entities.Servicio;
+import com.carlos.usuarios.beusers.services.ServicioService;
 
 @RestController
-@RequestMapping("/plan/estudio")
-public class PlanEstudioController {
+@RequestMapping("/servicio")
+public class ServicioController {
     
     @Autowired
-    private PlanEstudioService service;
+    private ServicioService service;
 
     @GetMapping
-    public List<PlanEstudio> list(){
+    public List<Servicio> list(){
         return service.findAll();
     }
 
-    @PostMapping
-    public ResponseEntity<?> create(@RequestBody PlanEstudio estudio){
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.save(estudio));
+    @GetMapping("/{id}")
+    public ResponseEntity<?> show(@PathVariable Long id){
+        Optional<Servicio> servicio = service.findById(id);
+
+        if(servicio.isPresent()){
+            return ResponseEntity.ok(servicio.orElseThrow());
+        }
+
+        return ResponseEntity.notFound().build();
     }
-    
+
+    @PostMapping
+    public ResponseEntity<?> create(@RequestBody Servicio servicio){
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.save(servicio));
+    }
+
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@RequestBody PlanEstudio estudio, @PathVariable Long id){
-        Optional<PlanEstudio> o = service.update(estudio, id);
+    public ResponseEntity<?> update(@RequestBody Servicio servicio, @PathVariable Long id){
+        Optional<Servicio> o = service.update(servicio, id);
         if(o.isPresent()){
             return ResponseEntity.status(HttpStatus.CREATED).body(o.orElseThrow());
         }
@@ -46,7 +57,7 @@ public class PlanEstudioController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id){
-        Optional<PlanEstudio> o = service.findById(id);
+        Optional<Servicio> o = service.findById(id);
         if(o.isPresent()){
             service.remove(id);
             return ResponseEntity.noContent().build();

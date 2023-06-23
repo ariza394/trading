@@ -23,11 +23,17 @@ public class PlanEstudio {
 
     private LocalDate inicio;
 
-    // Otros campos y métodos
-
     @PrePersist
     protected void onCreate() {
         inicio = LocalDate.now();
+    }
+
+    public PlanEstudio() {
+        // Constructor sin argumentos requerido por JPA
+    }
+
+    public PlanEstudio(Long id) {
+        this.id = id;
     }
 
     public Long getId() {

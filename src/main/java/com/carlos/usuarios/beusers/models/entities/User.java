@@ -1,14 +1,25 @@
 package com.carlos.usuarios.beusers.models.entities;
+import java.time.LocalDate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "users")
 public class User {
+
+    public User() {
+        // Constructor por defecto sin argumentos
+    }
+    
+    public User(Long id) {
+        this.id = id;
+    }
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +36,11 @@ public class User {
 
     @Column(nullable = false)
     private Integer rol;
+
+    @PrePersist
+    protected void onCreate() {
+        rol = 1;
+    }
 
     public Long getId() {
         return id;

@@ -37,7 +37,27 @@ public class MateriaController {
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody Materia materia){
+    public ResponseEntity<?> create(@ModelAttribute MateriaForm form){
+        Materia materia = new Materia();
+        materia.setNombre(form.getNombre());
+        materia.setDescripcion(form.getDescripcion());
+        materia.setImagen(form.getImagen());
+        
+        if (form.getArchivoAdjunto() != null) {
+            try {
+                
+                MultipartFile adjunto = form.getArchivoAdjunto();
+                String fileName = adjunto.getOriginalFilename();
+                String filePath = "C:\\Users\\Carlos\\Documents\\trading\\be\\be-users\\src\\archivos\\" + fileName;
+
+                // Guardar el archivo en el servidor
+                byte[] bytes = adjunto.getBytes();
+                FileCopyUtils.copy(bytes, new File(filePath));
+                materia.setImagen(filePath);
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+    }
         return ResponseEntity.status(HttpStatus.CREATED).body(service.save(materia));
     }
 
