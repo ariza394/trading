@@ -1,15 +1,18 @@
 package com.carlos.usuarios.beusers.models.entities;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "materias")
-public class Materia {
-
+@Table(name = "quizes")
+public class Quiz {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -17,18 +20,9 @@ public class Materia {
     @Column(nullable = false)
     private String nombre;
 
-    private String imagen;
-
-    @Column(columnDefinition = "TEXT")
-    private String descripcion;
-
-    public Materia() {
-        // Constructor sin argumentos requerido por JPA
-    }
-
-    public Materia(Long id) {
-        this.id = id;
-    }
+    @ManyToOne
+    @JoinColumn(name = "id_material", nullable = false)
+    private Materia materia;
 
     public Long getId() {
         return id;
@@ -46,20 +40,12 @@ public class Materia {
         this.nombre = nombre;
     }
 
-    public String getImagen() {
-        return imagen;
+    public Materia getMateria() {
+        return materia;
     }
 
-    public void setImagen(String imagen) {
-        this.imagen = imagen;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public void setMateria(Materia materia) {
+        this.materia = materia;
     }
 
     

@@ -14,11 +14,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.util.FileCopyUtils;
 import java.io.File;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import com.carlos.usuarios.beusers.clases.FileUtil;
 import com.carlos.usuarios.beusers.htmlForms.MateriaForm;
 import com.carlos.usuarios.beusers.models.entities.Materia;
 import com.carlos.usuarios.beusers.models.entities.User;
@@ -41,14 +42,16 @@ public class MateriaController {
         Materia materia = new Materia();
         materia.setNombre(form.getNombre());
         materia.setDescripcion(form.getDescripcion());
-        materia.setImagen(form.getImagen());
         
         if (form.getArchivoAdjunto() != null) {
             try {
                 
                 MultipartFile adjunto = form.getArchivoAdjunto();
-                String fileName = adjunto.getOriginalFilename();
-                String filePath = "C:\\Users\\Carlos\\Documents\\trading\\be\\be-users\\src\\archivos\\" + fileName;
+                String originalFilename = adjunto.getOriginalFilename();
+                String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+                String fileName = FileUtil.generateFileName(extension);
+                String filePath = FileUtil.generateFilePath("materia", fileName);
+
 
                 // Guardar el archivo en el servidor
                 byte[] bytes = adjunto.getBytes();
@@ -63,21 +66,36 @@ public class MateriaController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@ModelAttribute MateriaForm form,@PathVariable Long id){
-        Materia materia = new Materia();
+        Optional<Materia> existingMateria = service.findById(id);
+
+        if (!existingMateria.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Materia materia = existingMateria.get();
         materia.setNombre(form.getNombre());
         materia.setDescripcion(form.getDescripcion());
-        materia.setImagen(form.getImagen());
 
         if (form.getArchivoAdjunto() != null) {
             try {
                 
                 MultipartFile adjunto = form.getArchivoAdjunto();
-                String fileName = adjunto.getOriginalFilename();
-                String filePath = "C:\\Users\\Carlos\\Documents\\trading\\be\\be-users\\src\\archivos\\" + fileName;
+                String originalFilename = adjunto.getOriginalFilename();
+                String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+                String fileName = FileUtil.generateFileName(extension);
+                String filePath = FileUtil.generateFilePath("materia", fileName);
 
                 // Guardar el archivo en el servidor
                 byte[] bytes = adjunto.getBytes();
                 FileCopyUtils.copy(bytes, new File(filePath));
+
+                // Eliminar la imagen anterior
+                String imagenAnterior = materia.getImagen();
+                if (imagenAnterior != null) {
+                    FileUtil.deleteFile(imagenAnterior);
+                }
+
+
                 materia.setImagen(filePath);
             } catch (Exception e) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
