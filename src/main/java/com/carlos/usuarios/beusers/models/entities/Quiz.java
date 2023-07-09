@@ -1,5 +1,7 @@
 package com.carlos.usuarios.beusers.models.entities;
 
+import jakarta.validation.constraints.NotBlank;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,7 +19,7 @@ public class Quiz {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @NotBlank(message = "Meta algo mano")
     private String nombre;
 
     @ManyToOne

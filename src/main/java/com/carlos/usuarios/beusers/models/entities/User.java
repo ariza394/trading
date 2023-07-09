@@ -1,6 +1,8 @@
 package com.carlos.usuarios.beusers.models.entities;
 import java.time.LocalDate;
 
+import javax.validation.constraints.NotEmpty;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
 
 @Entity
 @Table(name = "users")
@@ -25,9 +28,12 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Email(message = "Formato de email invalido")
+    @Column(unique = true, nullable = false)
     private String email;
 
+    @NotEmpty
+    @Column(nullable = false)
     private String password;
 
     private String nombre;

@@ -24,6 +24,7 @@ import com.carlos.usuarios.beusers.htmlForms.MateriaForm;
 import com.carlos.usuarios.beusers.models.entities.Materia;
 import com.carlos.usuarios.beusers.models.entities.User;
 import com.carlos.usuarios.beusers.services.MateriaService;
+import com.carlos.usuarios.beusers.services.StorageService;
 
 @RestController
 @RequestMapping("/materia")
@@ -31,6 +32,9 @@ public class MateriaController {
     
     @Autowired
     private MateriaService service;
+
+    @Autowired
+    private StorageService serviceStorage;
 
     @GetMapping
     public List<Materia> list(){
@@ -45,17 +49,7 @@ public class MateriaController {
         
         if (form.getArchivoAdjunto() != null) {
             try {
-                
-                MultipartFile adjunto = form.getArchivoAdjunto();
-                String originalFilename = adjunto.getOriginalFilename();
-                String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
-                String fileName = FileUtil.generateFileName(extension);
-                String filePath = FileUtil.generateFilePath("materia", fileName);
-
-
-                // Guardar el archivo en el servidor
-                byte[] bytes = adjunto.getBytes();
-                FileCopyUtils.copy(bytes, new File(filePath));
+                String filePath = serviceStorage.uploadFile(form.getArchivoAdjunto(), "materia3");
                 materia.setImagen(filePath);
             } catch (Exception e) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -78,24 +72,9 @@ public class MateriaController {
 
         if (form.getArchivoAdjunto() != null) {
             try {
-                
-                MultipartFile adjunto = form.getArchivoAdjunto();
-                String originalFilename = adjunto.getOriginalFilename();
-                String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
-                String fileName = FileUtil.generateFileName(extension);
-                String filePath = FileUtil.generateFilePath("materia", fileName);
-
-                // Guardar el archivo en el servidor
-                byte[] bytes = adjunto.getBytes();
-                FileCopyUtils.copy(bytes, new File(filePath));
-
-                // Eliminar la imagen anterior
+                // Nombre imagen anterior
                 String imagenAnterior = materia.getImagen();
-                if (imagenAnterior != null) {
-                    FileUtil.deleteFile(imagenAnterior);
-                }
-
-
+                String filePath = serviceStorage.updateFile(form.getArchivoAdjunto(), "materia3", imagenAnterior);
                 materia.setImagen(filePath);
             } catch (Exception e) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
